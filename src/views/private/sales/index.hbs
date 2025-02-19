@@ -1,0 +1,48 @@
+{{> navigation/navigation }}
+
+<div class="container-fluid py-5 px-sm-3 px-lg-5">
+    <div class="row pt-5 pb-5">
+        <div class="col-md-9">
+            <h6 class="text-uppercase pt-3" style="letter-spacing: 5px;">listado de ventas</h6>
+        </div>
+        <div class="col-md-3 text-right">
+            <a href="/private/venta/create">{{>btn-new}}</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <table id="datatablesSimple" width="100%">
+                        <thead>
+                            <tr scope="col" colspan="4">
+                                <th>Comprobante</th>
+                                <th>Cliente</th>
+                                <th>Total Pago S/.</th>
+                                <th>Fecha</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each sales}}
+                            <tr scope="col">
+                                <td>{{comprobante}}</td>
+                                <td>{{cliente}}</td>
+                                <td>S/. {{montoPagar}}</td>
+                                <td>{{formatDateView fechaCreacion}}</td>
+                            </tr>
+                            {{else}}
+                            <tr scope="col">
+                                <td colspan="4">
+                                    <p class="card-text text-center">No hay registros que mostrar</p>
+                                </td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{> footer/footer }}

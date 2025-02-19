@@ -1,0 +1,26 @@
+{{> navigation/navigation }}
+
+<div class="container-fluid py-5 px-sm-3 px-lg-5">
+    <div class="row pt-5 ml-1 mr-1">
+        {{#each productos}}
+        <div class="col-lg-5 p-lg-5 bg-white" style="min-height: 500px;">
+            <div class="position-relative h-100">
+                <img class="position-absolute w-100 h-100" src="{{imagen}}" style="object-fit: cover;">
+            </div>
+        </div>
+        <div class="col-lg-7 pt-5 p-lg-5 bg-white text-justify">
+            <p class="text-uppercase" style="font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;">
+                {{marca}}</p>
+            <h5 class="font-weight-bold">{{nombreProducto}}</h5>
+            <p>STOCK: {{stock}}</p>
+            <h2 class="text-primary font-weight-bold">S/. {{precio}}</h2>
+            <p>{{detalle}}</p>
+        </div>
+        {{/each}}
+    </div>
+    <a href="https://wa.me/51935837974" class="floating_button" role="button" id="sendbtn" target="_blank">
+        <i class="fab fa-whatsapp fa-3x" aria-hidden="true"></i>
+    </a>
+</div>
+
+{{> footer/footer }}

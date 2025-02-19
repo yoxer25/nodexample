@@ -1,0 +1,65 @@
+{{#if user.user}}
+<div class="container-fluid position-relative nav-bar p-0">
+    <div class="container-lg position-relative p-0 px-lg-3" style="z-index: 9;">
+        <nav class="navbar navbar-expand-lg bg-light navbar-light shadow-lg py-3 py-lg-0 pl-3 pl-lg-5">
+            <a href="/private" class="navbar-brand">
+                <h3 class="m-0 text-primary text-uppercase">{{user.user.nombres}}</h3>
+            </a>
+            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-between px-3" id="navbarCollapse">
+                <div class="navbar-nav ml-auto py-0">
+                    <a href="/private/categoria" class="nav-item nav-link">CATEGORÍAS</a>
+                    <a href="/private/producto" class="nav-item nav-link">PRODUCTOS</a>
+
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">OPERACIONES</a>
+                        <div class="dropdown-menu border-0 rounded-0 m-0">
+                            <a href="/private/compra" class="dropdown-item">Compras</a>
+                            <a href="/private/venta" class="dropdown-item">Ventas</a>
+                        </div>
+                    </div>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"
+                                aria-hidden="true"></i> CUENTA</a>
+                        <div class="dropdown-menu border-0 rounded-0 m-0">
+                            <a href="/private/configuracion" class="dropdown-item"><i class="fa fa-cog"
+                                    aria-hidden="true"></i> Configuración</a>
+                            <a href="/private/LogOut" class="dropdown-item"><i class="fa fa-arrow-right"
+                                    aria-hidden="true"></i> Cerrar Sesión</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+</div>
+{{else}}
+<div class="container-fluid position-relative nav-bar p-0">
+    <div class="container-lg position-relative p-0 px-lg-3" style="z-index: 9;">
+        <nav class="navbar navbar-expand-lg bg-light navbar-light shadow-lg py-3 py-lg-0 pl-3 pl-lg-5">
+            <a href="/" class="navbar-brand">
+                <h1 class="m-0 text-primary">GRUPO E&J CORTEZ</h1>
+            </a>
+            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-between px-3" id="navbarCollapse">
+                <div class="navbar-nav ml-auto py-0">
+                    <a href="/servicios" class="nav-item nav-link">SERVICIOS</a>
+                    <a href="/cursos" class="nav-item nav-link">CURSOS</a>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">PRODUCTOS</a>
+                        <div class="dropdown-menu border-0 rounded-0 m-0">
+                            {{#each categorias}}
+                            <a href="/categoria/{{idCategoria}}" class="dropdown-item">{{nombreCategoria}}</a>
+                            {{/each}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+</div>
+{{/if}}

@@ -1,0 +1,22 @@
+<div class="container-fluid py-5 px-sm-3 px-lg-5">
+    <div class="row pt-5 pb-5">
+        <div class="col-lg-12 text-center">
+            <div class="card border-0">
+                <div class="card-header bg-primary text-center p-4">
+                    <h1 class="text-white m-0">Actualizar Producto</h1>
+                </div>
+                <div class="card-body rounded-bottom bg-white p-5">
+                    <form action="/private/producto/update/{{product.idProducto}}?_method=PUT" method="POST">
+                        <input type="hidden" name="_method" value="PUT">
+                        {{> product/create}}
+                        <div class="row" style="justify-content: center;">
+                            <div class="col-lg-4">
+                                <button class="btn btn-primary btn-block py-3" type="submit">Actualizar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,72 @@
+{{> navigation/navigation }}
+
+<div class="container-fluid py-5 px-sm-3 px-lg-5">
+    <div class="row pt-5 pb-5">
+        <div class="col-md-12 text-center">
+            <h6 class="text-uppercase" style="letter-spacing: 5px;">listado de categorías</h6>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-4 pb-5">
+            <div class="card border-0">
+                <div class="card-header bg-primary text-center p-4">
+                    <h1 class="text-white m-0">Nueva Categoría</h1>
+                </div>
+                <div class="card-body rounded-bottom bg-white p-5">
+                    <form action="/private/categoria/create" method="POST">
+                        <div class="form-group">
+                            <input type="text" class="form-control p-4" placeholder="Nombre Categoría"
+                                name="nameCategorie" id="nameCategorie" required="required" />
+                        </div>
+                        <div>
+                            <button class="btn btn-primary btn-block py-3" type="submit">Registrar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <table id="datatablesSimple" width="100%">
+                        <thead>
+                            <tr scope="col" colspan="3">
+                                <th>Nombre</th>
+                                <th colspan="2">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each categories}}
+                            <tr scope="col">
+                                <td>
+                                    {{nombreCategoria}}
+                                </td>
+                                <td>
+                                    <a class="btn btn-warning" href="/private/categoria/update/{{idCategoria}}"><i
+                                            class="fas fa-edit"></i></a>
+                                </td>
+                                <td>
+                                    <form action="/private/categoria/delete/{{idCategoria}}?_method=DELETE"
+                                        method="post">
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <button type="submit" class="btn btn-danger"><i
+                                                class="fas fa-trash"></i></button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {{else}}
+                            <tr scope="col">
+                                <td colspan="3">
+                                    <p class="card-text text-center">No hay registros que mostrar</p>
+                                </td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{> footer/footer }}

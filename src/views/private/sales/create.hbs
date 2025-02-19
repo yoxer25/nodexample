@@ -1,0 +1,161 @@
+{{> navigation/navigation}}
+
+<div class="container-fluid py-5 px-sm-3 px-lg-5">
+    <div class="row pt-5 pb-5">
+        <div class="col-lg-12 text-center">
+            <div class="card border-0">
+                <div class="card-body rounded-bottom bg-white">
+                    <form action="#" method="POST">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <select name="product" id="product" class="form-select form-control"
+                                        required="required">
+                                        <option value="" selected>Seleccione un producto</option>
+                                        {{#each products}}
+                                        <option value="{{@key}}">{{nombreProducto}}</option>
+                                        {{/each}}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <input type="number" class="form-control" placeholder="Cantidad" name="quantity"
+                                        id="quantity" required="required" />
+                                </div>
+                            </div>
+                            <div class="col-md-2 form-group">
+                                <a class="btn btn-primary btn-block" onclick="addProduct()">Agregar</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-lg-9">
+            <div class="card">
+                <div class="card-body">
+                    <table id="listProductSale" name="listProductSale" width="100%">
+                        <thead>
+                            <tr scope="col" colspan="5">
+                                <th colspan="2">Producto</th>
+                                <th>Precio (u) S/</th>
+                                <th>Cantidad</th>
+                                <th>Precio (t) S/</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productsSale">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="card">
+                <div class="card-body">
+                    <form action="/private/venta/create" method="POST">
+                        <div class="form-group">
+                            <input type="hidden" class="form-control p-4" name="sale" id="sale" value=""
+                                required="required" />
+                            <input type="text" class="form-control" placeholder="N° de Comprobante" name="receipt"
+                                id="receipt" value="" required="required" />
+                        </div>
+                        <div class="form-group">
+                            <input type="text" maxlength="11" class="form-control" placeholder="N° de Documento Cliente"
+                                name="customer" id="customer" onkeypress="return solonumeros(event)" />
+                        </div>
+                        <div>
+                            <button class="btn btn-primary btn-block" type="submit" onclick="newSale()">Finalizar
+                                Venta</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{> footer/footer }}
+
+<script>
+    const listProducts = ({{{ convertJson products }}});
+
+    //inicializamos nuestro array
+    let productsSale = [];
+    const addProduct = () => {
+        // traemos los valores del formulario de agregar productos
+        const product = document.querySelector("#product");
+        const option = product.options[product.selectedIndex];
+        const quantity = document.getElementById("quantity").value;
+
+        const exist = productsSale.find((productSale) => {
+            return productSale.idProduct === listProducts[option.value].idProducto;
+        });
+        if (exist === undefined) {
+            if (quantity <= 0 || option.value === "") {
+                return alert("Complete todos los campos");
+            } else {
+                const product = listProducts[option.value];
+                if (product.stock >= quantity) {
+                    const productSale = {
+                        idProduct: product.idProducto,
+                        product: option.text,
+                        unitPrice: product.precio,
+                        quantity: quantity,
+                        totalPrice: product.precio * quantity
+                    };
+                    productsSale.push(productSale);
+                    renderTable(productSale);
+                } else {
+                    return alert("Stock insuficiente");
+                }
+            }
+        } else {
+            return alert("Producto ya existe");
+        }
+    }
+
+    /* función para renderizar la tabla cuando se
+    agregue o quiten productos */
+    const renderTable = (productSale) => {
+        // creamos una constante para nuestra tabla que tendrá la lista de productos a vender
+        const tbodyTable = document.getElementById("productsSale");
+        // agregamos los valores del objeto en cada fila de la tabla
+        tbodyTable.innerHTML += `<tr><td><input type="hidden" value="${productSale.idProduct}" /></td><td>${productSale.product}</td><td>${productSale.unitPrice}</td><td>${productSale.quantity}</td><td>${productSale.totalPrice}</td></tr>`;
+    };
+
+    const newSale = () => {
+        if (productsSale.length > 0) {
+            const receipt = document.getElementById("receipt").value;
+            const customer = document.getElementById("customer").value;
+            if (receipt === "" || customer === "") {
+                alert("iTodos los campos son obligatorios");
+            } else {
+                const inputSale = document.getElementById("sale");
+                inputSale.value = JSON.stringify(productsSale);
+            }
+        } else {
+            alert("Error, sin productos");
+        }
+    };
+
+    // función para que el input solo deje escribir números
+    const solonumeros = (e) => {
+        key = e.keyCode || e.which;
+        teclado = String.fromCharCode(key);
+        numeros = "1234567890";
+        especiales = "8-37-38-46";
+        teclado_especial = false;
+        for (var i in especiales) {
+            if (key == especiales[i]) {
+                teclado_especial = true;
+            }
+        }
+        if (numeros.indexOf(teclado) == -1 && !teclado_especial) {
+            return false;
+        }
+    }
+</script>
