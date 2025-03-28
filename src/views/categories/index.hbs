@@ -13,7 +13,7 @@
                     <h1 class="text-white m-0">Nueva Categoría</h1>
                 </div>
                 <div class="card-body rounded-bottom bg-white p-5">
-                    <form action="/private/categoria/create" method="POST">
+                    <form action="/categoria/create" method="POST">
                         <div class="form-group">
                             <input type="text" class="form-control p-4" placeholder="Nombre Categoría"
                                 name="nameCategorie" id="nameCategorie" required="required" />
@@ -42,11 +42,11 @@
                                     {{nombreCategoria}}
                                 </td>
                                 <td>
-                                    <a class="btn btn-warning" href="/private/categoria/update/{{idCategoria}}"><i
+                                    <a class="btn btn-warning" href="/categoria/update/{{idCategoria}}"><i
                                             class="fas fa-edit"></i></a>
                                 </td>
                                 <td>
-                                    <form action="/private/categoria/delete/{{idCategoria}}?_method=DELETE"
+                                    <form action="/categoria/delete/{{idCategoria}}?_method=DELETE"
                                         method="post">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <button type="submit" class="btn btn-danger"><i

@@ -25,11 +25,11 @@ DROP TABLE IF EXISTS `categorias`;
 CREATE TABLE `categorias` (
   `idCategoria` varchar(100) NOT NULL,
   `nombreCategoria` varchar(100) NOT NULL,
-  `fechaCreacion` datetime DEFAULT NOT NULL,
-  `fechaActualizacion` datetime DEFAULT NOT NULL,
+  `fechaCreacion` datetime DEFAULT NULL,
+  `fechaActualizacion` datetime DEFAULT NULL,
   `estado` int NOT NULL,
   PRIMARY KEY (`idCategoria`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -53,11 +53,11 @@ CREATE TABLE `compras` (
   `cliente` varchar(100) NOT NULL,
   `comprobante` varchar(10) NOT NULL,
   `montoPagar` int NOT NULL,
-  `fechaComprobante` date NOT NULL,
-  `fechaCreacion` datetime DEFAULT NOT NULL,
+  `fechaComprobante` date NULL,
+  `fechaCreacion` datetime DEFAULT NULL,
   `estado` int NOT NULL,
   PRIMARY KEY (`idCompra`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -89,7 +89,7 @@ CREATE TABLE `detalle_compra` (
   KEY `fx_idProducto_idx_idx` (`idProducto`),
   CONSTRAINT `fx_idCompra_idx` FOREIGN KEY (`idCompra`) REFERENCES `compras` (`idCompra`),
   CONSTRAINT `fx_idProducto_idx` FOREIGN KEY (`idProducto`) REFERENCES `productos` (`idProducto`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -121,7 +121,7 @@ CREATE TABLE `detalle_venta` (
   KEY `fx_idProducto_idx` (`idProducto`),
   CONSTRAINT `fx_idProducto` FOREIGN KEY (`idProducto`) REFERENCES `productos` (`idProducto`),
   CONSTRAINT `fx_idVenta` FOREIGN KEY (`idVenta`) REFERENCES `ventas` (`idVenta`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -149,13 +149,13 @@ CREATE TABLE `productos` (
   `precio` int NOT NULL,
   `stock` int NOT NULL,
   `imagen` varchar(500) NOT NULL,
-  `fechaCreacion` datetime DEFAULT NOT NULL,
-  `fechaActualizacion` datetime DEFAULT NOT NULL,
+  `fechaCreacion` datetime DEFAULT NULL,
+  `fechaActualizacion` datetime DEFAULT NULL,
   `estado` int NOT NULL,
   PRIMARY KEY (`idProducto`),
   KEY `fx_idCategoria_idx` (`idCategoria`),
   CONSTRAINT `fx_idCategoria` FOREIGN KEY (`idCategoria`) REFERENCES `categorias` (`idCategoria`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -179,11 +179,11 @@ CREATE TABLE `usuarios` (
   `nombreUsuario` varchar(100) NOT NULL,
   `documento` char(11) NOT NULL,
   `contrasena` varchar(500) NOT NULL,
-  `fechaCreacion` datetime DEFAULT NOT NULL,
-  `fechaActualizacion` datetime DEFAULT NOT NULL,
+  `fechaCreacion` datetime DEFAULT NULL,
+  `fechaActualizacion` datetime DEFAULT NULL,
   `estado` int NOT NULL,
   PRIMARY KEY (`idUsuario`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -208,10 +208,10 @@ CREATE TABLE `ventas` (
   `cliente` varchar(100) NOT NULL,
   `comprobante` varchar(10) NOT NULL,
   `montoPagar` int NOT NULL,
-  `fechaCreacion` datetime NOT NULL,
+  `fechaCreacion` datetime NULL,
   `estado` int NOT NULL,
   PRIMARY KEY (`idVenta`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --

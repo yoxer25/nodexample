@@ -1,15 +1,16 @@
 <div class="container-fluid py-5 px-sm-3 px-lg-5">
-    <div class="row pt-5" style="justify-content: center;">
-        <div class="col-lg-5 pb-5">
+    <div class="row pt-5 pb-5   " style="justify-content: center;">
+        <div class="col-lg-5 text-center">
             <div class="card border-0">
                 <div class="card-header bg-primary text-center p-4">
-                    <h1 class="text-white m-0">Cambiar Contraseña</h1>
+                    <h1 class="text-white m-0">Actualizar Categoría</h1>
                 </div>
                 <div class="card-body rounded-bottom bg-white p-5">
-                    <form action="/private/configuracion" method="POST">
+                    <form action="/categoria/update/{{categorie.idCategoria}}?_method=PUT" method="post">
+                        <input type="hidden" name="_method" value="PUT">
                         <div class="form-group">
-                            <input type="password" class="form-control p-4" placeholder="Nueva Contraseña"
-                                name="newPassword" id="newPassword" required="required" />
+                            <input type="text" class="form-control p-4" placeholder="Nombre Categoría"
+                                name="nameCategorie" id="nameCategorie" value="{{categorie.nombreCategoria}}" />
                         </div>
                         <div>
                             <button class="btn btn-primary btn-block py-3" type="submit">Actualizar</button>

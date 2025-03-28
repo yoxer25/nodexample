@@ -2,7 +2,7 @@
 import { Router } from "express";
 
 // importamos todas las funciones para asignar cada función a una ruta de la web
-import * as homeCtrl from "../controllers/home.controller.js";
+import * as salesCtrl from "../controllers/sale.controller.js";
 
 /* para proteger nuestras rutas
 privadas, se verificará el
@@ -13,12 +13,13 @@ cookies */
 podrá acceder a estas rutas;
 caso contrario, no podrá acceder */
 import { requireToken } from "../middlewares/requireToken.js";
+
 const router = Router();
 
-// rutas de la página principal
-router.get("/", requireToken, homeCtrl.getHome);
-router.get("/configuracion", requireToken, homeCtrl.getConfig);
-router.post("/configuracion", requireToken, homeCtrl.updatePassword);
+// rutas de la página privada de ventas
+router.get("/", requireToken, salesCtrl.getSales);
+router.get("/create", requireToken, salesCtrl.getCreateSale);
+router.post("/create", requireToken, salesCtrl.createSale);
 
 // exportamos la constante "router" para llamarla desde "app.js" que es el archivo donde se configura toda la web
 export default router;

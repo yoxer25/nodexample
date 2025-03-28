@@ -2,8 +2,7 @@
 import { Router } from "express";
 
 // importamos todas las funciones para asignar cada función a una ruta de la web
-import * as homeCtrl from "../controllers/home.controller.js";
-
+import * as myaccountCtrl from "../controllers/myaccount.controller.js";
 /* para proteger nuestras rutas
 privadas, se verificará el
 token que nos están
@@ -16,9 +15,9 @@ import { requireToken } from "../middlewares/requireToken.js";
 const router = Router();
 
 // rutas de la página principal
-router.get("/", requireToken, homeCtrl.getHome);
-router.get("/configuracion", requireToken, homeCtrl.getConfig);
-router.post("/configuracion", requireToken, homeCtrl.updatePassword);
+router.get("/signIn", myaccountCtrl.getSignIn);
+router.post("/signIn", myaccountCtrl.signIn);
+router.get("/LogOut", requireToken, myaccountCtrl.logOut);
 
 // exportamos la constante "router" para llamarla desde "app.js" que es el archivo donde se configura toda la web
 export default router;

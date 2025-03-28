@@ -1,10 +1,6 @@
 // importamos la conexión a la base de datos
 import pool from "../bd.js";
-// para generar id encriptados
-import crypto from "crypto";
-// para encriptar y descifrar la contraseña del usuario
-import bcrytp from "bcrypt";
-
+import { helpers } from "../libraries/helpers.js";
 class SchemaUser {
   constructor(id, username, dni, userpassword, estado) {
     this.idUsuario = id;
@@ -15,7 +11,7 @@ class SchemaUser {
   }
 }
 
-export class formatUser {
+export class User {
   /* // para crear un nuevo usuario
   static async registerUser(username, dni, userpassword) {
     const id = await crypto.randomUUID();
@@ -32,14 +28,14 @@ export class formatUser {
       [dni]
     );
     if (user.length > 0) {
-       const userData = user[0];
-      const validPassword = await bcrytp.compare(
+      const userData = user[0];
+      const validPassword = await helpers.matchPassword(
         userpassword,
         userData.contrasena
       );
       if (validPassword) {
         const usuario = {
-          id: userData.iduUsuario,
+          id: userData.idUsuario,
           nombre: userData.nombreUsuario,
         };
         return usuario;
@@ -56,11 +52,11 @@ export class formatUser {
     );
     if (user.length > 0) {
       const userData = user[0];
-      const password = await bcrytp.hash(newPassword, 10);
+      const password = await helpers.encryptPassword(newPassword);
       const userUpdate = new SchemaUser(
         userData.idUsuario,
         userData.nombreUsuario,
-        userData.dni,
+        userData.documento,
         password,
         userData.estado
       );
@@ -69,6 +65,5 @@ export class formatUser {
         userData.idUsuario,
       ]);
     }
-    throw new Error("Datos Incorrectos");
   }
 }

@@ -8,8 +8,6 @@ import path from "path";
 // facilitar la posibilidad de modificar las cookies
 import cookieParser from "cookie-parser";
 import { fileURLToPath } from "url";
-// para generar el token de usuario
-import jwt from "jsonwebtoken";
 // para peoder usar todos los métodos HTTP (GET, POST, PUT, DELETE)
 import methodOverride from "method-override";
 // para conectar con el front
@@ -18,16 +16,12 @@ import cors from "cors";
 import { helpers } from "./libraries/helpers.js";
 
 // desde la carpeta "routes" todos los archivos para poder establecer las rutas de la web
+import myaccountRoutes from "./routes/myaccount.route.js";
 import homeRoutes from "./routes/home.route.js";
-import servicesRoutes from "./routes/services.route.js";
-import categoriesRoutes from "./routes/categories.route.js";
-import productsRoutes from "./routes/products.route.js";
-import loginRoutes from "./routes/login.route.js";
-import privateRoutes from "./routes/private/home.route.js";
-import priProductsRoutes from "./routes/private/product.route.js";
-import priCategoriesRoutes from "./routes/private/categorie.route.js";
-import priSalesRoutes from "./routes/private/sale.route.js";
-import priShoppingRoutes from "./routes/private/shopping.route.js"
+import categoriesRoutes from "./routes/categorie.route.js";
+import productsRoutes from "./routes/product.route.js";
+import salesRoutes from "./routes/sale.route.js";
+import shoppingRoutes from "./routes/shopping.route.js"
 
 //constantes
 // para iniciar el servidor
@@ -59,30 +53,16 @@ app.use(express.static(path.resolve(_dirname + "/public")));
 app.use(express.json());
 // modificar cookies
 app.use(cookieParser());
-
-app.use((req, res, next) => {
-  const token = req.cookies.access_token;
-  req.session = { user: null };
-  try {
-    const data = jwt.verify(token, "palabrasecreta");
-    req.session.user = data;
-  } catch (error) {}
-  next();
-});
 app.use(methodOverride("_method"));
 app.use(cors());
 
 // rutas de la web
 app.use(homeRoutes);
-app.use("/servicios", servicesRoutes);
+app.use("/myaccount", myaccountRoutes);
 app.use("/categoria", categoriesRoutes);
 app.use("/producto", productsRoutes);
-app.use("/myaccount", loginRoutes);
-app.use("/private", privateRoutes);
-app.use("/private/categoria", priCategoriesRoutes);
-app.use("/private/producto", priProductsRoutes);
-app.use("/private/venta", priSalesRoutes);
-app.use("/private/compra", priShoppingRoutes);
+app.use("/venta", salesRoutes);
+app.use("/compra", shoppingRoutes);
 
 // exportamos la constante "app" para poder utilizarla en otras parte del proyecto
 export default app;

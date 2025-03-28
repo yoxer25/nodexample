@@ -3,13 +3,13 @@
 <div class="container-fluid py-5 px-sm-3 px-lg-5">
     <div class="row pt-5 pb-5">
         <div class="col-md-5">
-            <a href="/private/producto/create">{{>btn-new}}</a>
+            <a href="/producto/create">{{>btn-new}}</a>
             <h6 class="text-uppercase pt-3" style="letter-spacing: 5px;">listado de productos</h6>
         </div>
         <div class="col-md-7">
             <div class="card">
                 <div class="card-body">
-                    <form action="/private/producto/importbd" method="POST" enctype="multipart/form-data">
+                    <form action="/producto/importbd" method="POST" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col-md-8 mb-3">
                                 <input type="file" accept=".xlsx" name="excel" id="excel"
@@ -49,11 +49,11 @@
                                 <td>S/. {{precio}}</td>
                                 <td>{{stock}}</td>
                                 <td>
-                                    <a class="btn btn-warning" href="/private/producto/update/{{idProducto}}"><i
+                                    <a class="btn btn-warning" href="/producto/update/{{idProducto}}"><i
                                             class="fas fa-edit"></i></a>
                                 </td>
                                 <td>
-                                    <form action="/private/producto/delete/{{idProducto}}?_method=DELETE" method="post">
+                                    <form action="/producto/delete/{{idProducto}}?_method=DELETE" method="post">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <button type="submit" class="btn btn-danger"><i
                                                 class="fas fa-trash"></i></button>
