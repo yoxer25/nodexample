@@ -12,12 +12,23 @@ class SchemaSaleDetail {
     this.cantidad = quantity;
     this.precioUnitario = unitPrice;
     this.montoTotal = totalPrice;
-    this.estado = status;
   }
 }
 
 // exportamos la clase "SaleDetail" para usarla en cualquier controlador
 export class SaleDetail {
+  // para traer todos los productos registrados en una venta en específico
+  static async getSaleDetail({ Id }) {
+    const [products] = await pool.query(
+      "SELECT p.nombreProducto, p.marca, dv.cantidad, dv.precioUnitario, dv.montoTotal FROM detalle_venta dv INNER JOIN productos p ON dv.idProducto = p.idProducto WHERE dv.idVenta = ?",
+      [Id]
+    );
+    if (products) {
+      return products;
+    } else {
+      throw new Error("Datos no encontrados");
+    }
+  }
   // para agregar un nuevo ítem de la venta
   static async create({
     id,
@@ -26,7 +37,6 @@ export class SaleDetail {
     quantity,
     unitPrice,
     totalPrice,
-    status,
   }) {
     const newSaleDetail = new SchemaSaleDetail(
       id,
@@ -34,8 +44,7 @@ export class SaleDetail {
       idProduct,
       quantity,
       unitPrice,
-      totalPrice,
-      status
+      totalPrice
     );
     await pool.query("INSERT INTO detalle_venta SET ?", [newSaleDetail]);
   }

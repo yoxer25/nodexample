@@ -1,5 +1,6 @@
 // importamos la conexión a la base de datos
 import pool from "../bd.js";
+import { helpers } from "../libraries/helpers.js";
 
 // constructor con los campos de la tabla productos en la base de datos
 class SchemaProduct {
@@ -8,25 +9,17 @@ class SchemaProduct {
     idCategorie,
     nameProduct,
     brand,
-    detail,
-    price,
-    stock,
-    image,
-    created,
-    updated,
-    status
+    priceUnit,
+    priceWholesale,
+    stock
   ) {
     this.idProducto = id;
     this.idCategoria = idCategorie;
     this.nombreProducto = nameProduct;
     this.marca = brand;
-    this.detalle = detail;
-    this.precio = price;
+    this.precio_unitario = priceUnit;
+    this.precio_mayor = priceWholesale;
     this.stock = stock;
-    this.imagen = image;
-    this.fechaCreacion = created;
-    this.fechaActualizacion = updated;
-    this.estado = status;
   }
 }
 
@@ -58,7 +51,7 @@ export class Product {
   // para traer todos los productos registrados en la BD
   static async getProducts() {
     const [products] = await pool.query(
-      "SELECT p.idProducto, p.nombreProducto, p.marca, p.precio, p.stock, c.nombreCategoria AS categoria FROM productos p INNER JOIN categorias c ON p.idCategoria = c.idCategoria WHERE p.estado = 1"
+      "SELECT p.idProducto, p.nombreProducto, p.marca, p.precio_unitario, p.precio_mayor, p.stock, c.nombreCategoria AS categoria FROM productos p INNER JOIN categorias c ON p.idCategoria = c.idCategoria WHERE p.estado = 1"
     );
     if (products) {
       return products;
@@ -69,7 +62,7 @@ export class Product {
   // para traer todos los productos registrados en la BD de una categoría en específico
   static async getProductsByCategorie({ Id }) {
     const [products] = await pool.query(
-      "SELECT p.idProducto, p.nombreProducto, p.marca, p.precio, p.imagen FROM productos p INNER JOIN categorias c ON p.idCategoria = c.idCategoria WHERE c.idCategoria = ?",
+      "SELECT p.idProducto, p.nombreProducto, p.marca, p.precio_unitario, p.precio_mayor FROM productos p INNER JOIN categorias c ON p.idCategoria = c.idCategoria WHERE c.idCategoria = ?",
       [Id]
     );
     if (products) {
@@ -84,33 +77,26 @@ export class Product {
     categorie,
     nameProduct,
     brand,
-    detail,
-    price,
+    priceUnit,
+    priceWholesale,
     stock,
-    image,
-    created,
-    updated,
-    status,
   }) {
     const newProduct = new SchemaProduct(
       id,
       categorie,
       nameProduct,
       brand,
-      detail,
-      price,
-      stock,
-      image,
-      created,
-      updated,
-      status
+      priceUnit,
+      priceWholesale,
+      stock
     );
+    newProduct.fechaCreacion = helpers.formatDate();
     await pool.query("INSERT INTO productos SET ?", [newProduct]);
   }
   // para mostrar los datos de un producto seleccionada
   static async getProductById({ Id }) {
     const [productById] = await pool.query(
-      "SELECT p.idProducto, p.nombreProducto, p.marca, p.detalle, p.precio, p.stock, p.imagen, p.fechaCreacion, c.nombreCategoria AS categoria, c.idCategoria FROM productos p INNER JOIN categorias c ON p.idCategoria = c.idCategoria WHERE p.idProducto = ?",
+      "SELECT p.idProducto, p.nombreProducto, p.marca, p.precio_unitario, p.precio_mayor, p.stock, p.fechaCreacion, c.nombreCategoria AS categoria, c.idCategoria FROM productos p INNER JOIN categorias c ON p.idCategoria = c.idCategoria WHERE p.idProducto = ?",
       [Id]
     );
     if (productById) {
@@ -125,27 +111,20 @@ export class Product {
     categorie,
     nameProduct,
     brand,
-    detail,
-    price,
+    priceUnit,
+    priceWholesale,
     stock,
-    image,
-    created,
-    updated,
-    status,
   }) {
     const newProduct = new SchemaProduct(
       Id,
       categorie,
       nameProduct,
       brand,
-      detail,
-      price,
-      stock,
-      image,
-      created,
-      updated,
-      status
+      priceUnit,
+      priceWholesale,
+      stock
     );
+    newProduct.fechaActualizacion = helpers.formatDate();
     await pool.query("UPDATE productos p set ? WHERE p.idProducto = ?", [
       newProduct,
       Id,
@@ -157,27 +136,21 @@ export class Product {
     categorie,
     nameProduct,
     brand,
-    detail,
-    price,
+    priceUnit,
+    priceWholesale,
     stock,
-    image,
-    created,
-    updated,
-    status,
   }) {
     const newProduct = new SchemaProduct(
       Id,
       categorie,
       nameProduct,
       brand,
-      detail,
-      price,
-      stock,
-      image,
-      created,
-      updated,
-      status
+      priceUnit,
+      priceWholesale,
+      stock
     );
+    newProduct.fechaActualizacion = helpers.formatDate();
+    newProduct.estado = 0;
     await pool.query("UPDATE productos p set ? WHERE p.idProducto = ?", [
       newProduct,
       Id,

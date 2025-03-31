@@ -27,7 +27,6 @@ export const create = async (req, res) => {
       res.redirect("/categoria");
     }
   } catch (error) {
-    const msg = error.message;
     res.redirect("/categoria");
   }
 };
@@ -35,11 +34,10 @@ export const create = async (req, res) => {
 // función para traer desde la base de datos la información de la categoría que se quiere editar
 export const getCategorieById = async (req, res) => {
   const { Id } = req.params;
+  const user = req.session;
   try {
     const categorie = await Categorie.getCategorieById({ Id });
-    res.render("categories/update", {
-      categorie: categorie[0],
-    });
+    res.render("categories/update", { user, categorie: categorie[0] });
   } catch (error) {
     const msg = error.message;
     res.redirect("/categoria");

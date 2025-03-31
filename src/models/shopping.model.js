@@ -1,16 +1,15 @@
 // importamos la conexión a la base de datos
 import pool from "../bd.js";
+import { helpers } from "../libraries/helpers.js";
 
 // constructor con los campos de la tabla compras en la base de datos
 class SchemaShopping {
-  constructor(id, customer, receipt, amountPay, receiptDate, created, status) {
+  constructor(id, customer, receipt, amountPay, receiptDate) {
     this.idCompra = id;
     this.cliente = customer;
     this.comprobante = receipt;
     this.montoPagar = amountPay;
     this.fechaComprobante = receiptDate;
-    this.fechaCreacion = created,
-    this.estado = status;
   }
 }
 
@@ -35,16 +34,15 @@ export class Shopping {
     return shopping;
   }
   // para crear nueva compra
-  static async create({ id, customer, receipt, amountPay, receiptDate, created, status }) {
+  static async create({ id, customer, receipt, amountPay, receiptDate }) {
     const newShopping = new SchemaShopping(
       id,
       customer,
       receipt,
       amountPay,
-      receiptDate,
-      created,
-      status
+      receiptDate
     );
+    newShopping.fechaCreacion = helpers.formatDate();
     await pool.query("INSERT INTO compras SET ?", [newShopping]);
   }
   // para traer el id de la última compra registrada

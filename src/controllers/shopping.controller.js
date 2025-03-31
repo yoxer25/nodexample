@@ -41,27 +41,22 @@ export const createShopping = async (req, res) => {
     validationInput(customer, receipt, receiptDate);
     const shopping = JSON.parse(req.body.shopping);
     const id = crypto.randomUUID();
-    const created = helpers.formatDate();
     let amountPay = 0;
     shopping.map((productShopping) => {
       amountPay += productShopping.totalPrice;
     });
-    const status = 1;
     await Shopping.create({
       id,
       customer,
       receipt,
       amountPay,
       receiptDate,
-      created,
-      status,
     });
     // recorremos los productos de la lista, para agregarlos en compra_detalle
     shopping.map(async (productShopping) => {
       const id = crypto.randomUUID();
       const shopping = await Shopping.ShoppingId();
       const idShopping = shopping[0].idCompra;
-      const status = 1;
       await ShoppingDetail.create({
         id,
         idShopping,
@@ -69,7 +64,6 @@ export const createShopping = async (req, res) => {
         quantity: productShopping.quantity,
         unitPrice: productShopping.unitPrice,
         totalPrice: productShopping.totalPrice,
-        status,
       });
     });
     // recorremos los productos de la lista para ir aumentando el stock
@@ -79,33 +73,24 @@ export const createShopping = async (req, res) => {
       const categorie = product[0].idCategoria;
       const nameProduct = product[0].nombreProducto;
       const brand = product[0].marca;
-      const detail = product[0].detalle;
-      const price = product[0].precio;
+      const priceUnit = product[0].precio_unitario;
+      const priceWholesale = product[0].precio_mayor;
       const quantity = product[0].stock;
-      const image = product[0].imagen;
-      const created = product[0].fechaCreacion;
-      const updated = helpers.formatDate();
       const quantityForm = Number(productShopping.quantity);
-      const status = 1;
       const stock = quantity + quantityForm;
       await Product.updateById({
         Id,
         categorie,
         nameProduct,
         brand,
-        detail,
-        price,
+        priceUnit,
+        priceWholesale,
         stock,
-        image,
-        created,
-        updated,
-        status,
       });
     });
     res.redirect("/compra");
   } catch (error) {
-    const msg = error.message;
-    console.log(msg);
+    console.log(error.message);
     res.redirect("/compra/create");
   }
 };

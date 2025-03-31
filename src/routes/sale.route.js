@@ -20,6 +20,7 @@ const router = Router();
 router.get("/", requireToken, salesCtrl.getSales);
 router.get("/create", requireToken, salesCtrl.getCreateSale);
 router.post("/create", requireToken, salesCtrl.createSale);
+router.get("/:Id", requireToken, salesCtrl.viewSale);
 
 // exportamos la constante "router" para llamarla desde "app.js" que es el archivo donde se configura toda la web
 export default router;

@@ -10,7 +10,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <select name="product" id="product" class="form-select form-control"
-                                        required="required">
+                                        style="width: 100%;" required="required">
                                         <option value="" selected>Seleccione un producto</option>
                                         {{#each products}}
                                         <option value="{{@key}}">{{nombreProducto}}</option>
@@ -20,8 +20,8 @@
                             </div>
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <input type="number" class="form-control" placeholder="Precio" name="price"
-                                        id="price" required="required" />
+                                    <input type="text" class="form-control" placeholder="Precio" name="price" id="price"
+                                        required="required" />
                                 </div>
                             </div>
                             <div class="col-md-2">
@@ -73,9 +73,8 @@
                             <input type="date" class="form-control" name="receiptDate" id="receiptDate" />
                         </div>
                         <div class="form-group">
-                            <input type="text" maxlength="11" class="form-control"
-                                placeholder="N° de Documento Cliente" name="customer" id="customer"
-                                onkeypress="return solonumeros(event)" />
+                            <input type="text" maxlength="11" class="form-control" placeholder="N° de Documento Cliente"
+                                name="customer" id="customer" onkeypress="return solonumeros(event)" />
                         </div>
                         <div>
                             <button class="btn btn-primary btn-block" type="submit" onclick="newShopping()">Finalizar
@@ -113,9 +112,9 @@
                 const productShopping = {
                     idProduct: product.idProducto,
                     product: option.text,
-                    unitPrice,
+                    unitPrice: parseFloat(unitPrice),
                     quantity: quantity,
-                    totalPrice: unitPrice * quantity
+                    totalPrice: parseFloat(unitPrice) * quantity
                 };
                 productsShopping.push(productShopping);
                 renderTable(productShopping);

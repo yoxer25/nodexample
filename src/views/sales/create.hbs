@@ -7,14 +7,23 @@
                 <div class="card-body rounded-bottom bg-white">
                     <form action="#" method="POST">
                         <div class="row">
-                            <div class="col-md-8">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <select name="product" id="product" class="form-select form-control"
-                                        required="required">
+                                        style="width: 100%;" required="required">
                                         <option value="" selected>Seleccione un producto</option>
                                         {{#each products}}
                                         <option value="{{@key}}">{{nombreProducto}}</option>
                                         {{/each}}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <select name="priceSelector" id="priceSelector" class="form-select form-control"
+                                        required="required">
+                                        <option value="1" selected>Por Menor</option>
+                                        <option value="2">Por Mayor</option>
                                     </select>
                                 </div>
                             </div>
@@ -89,6 +98,8 @@
         // traemos los valores del formulario de agregar productos
         const product = document.querySelector("#product");
         const option = product.options[product.selectedIndex];
+        const priceSelector = document.querySelector("#priceSelector");
+        const optionPrice = priceSelector.options[priceSelector.selectedIndex];
         const quantity = document.getElementById("quantity").value;
 
         const exist = productsSale.find((productSale) => {
@@ -99,13 +110,19 @@
                 return alert("Complete todos los campos");
             } else {
                 const product = listProducts[option.value];
+                let unitPrice = 0;
+                if (optionPrice.value === "1") {
+                    unitPrice = product.precio_unitario;
+                } else {
+                    unitPrice = product.precio_mayor;
+                }
                 if (product.stock >= quantity) {
                     const productSale = {
                         idProduct: product.idProducto,
                         product: option.text,
-                        unitPrice: product.precio,
+                        unitPrice: parseFloat(unitPrice),
                         quantity: quantity,
-                        totalPrice: product.precio * quantity
+                        totalPrice: parseFloat(unitPrice) * quantity
                     };
                     productsSale.push(productSale);
                     renderTable(productSale);

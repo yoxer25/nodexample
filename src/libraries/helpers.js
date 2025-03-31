@@ -11,8 +11,11 @@ helpers.convertJson = (obj) => {
   return JSON.stringify(obj);
 };
 
-// función para formatear fechas al guardar en la base de daros
+// función para formatear fecha de creación y actualización al guardar en la base de daros
 helpers.formatDate = () => dayjs().format('YYYY-MM-DD HH:mm:ss');
+
+// función para formatear fecha del comprobante en el archivo PDF
+helpers.formatDateTime = (dateTime) => dayjs(dateTime).format('YYYY-MM-DD HH:mm:ss');
 
 // función para formatear fechas para las vistas
 helpers.formatDateView = (date) => dayjs(date).format('YYYY-MM-DD');

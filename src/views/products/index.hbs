@@ -16,8 +16,7 @@
                                     class="input-contact form-control">
                             </div>
                             <div class="col-md-4">
-                                <button class="btn btn-primary btn-block" type="submit"><i class="fa fa-upload"
-                                        aria-hidden="true"></i> Importar</button>
+                                <button class="btn btn-primary btn-block" type="submit"><img src="/icon/upload-solid.svg" width="10%"> Importar</button>
                             </div>
                         </div>
                     </form>
@@ -31,11 +30,12 @@
                 <div class="card-body">
                     <table id="datatablesSimple" width="100%">
                         <thead>
-                            <tr scope="col" colspan="7">
+                            <tr scope="col">
                                 <th>Producto</th>
                                 <th>Categoría</th>
                                 <th>Marca</th>
-                                <th>Precio</th>
+                                <th>Precio Unitario</th>
+                                <th>Precio Por Mayor</th>
                                 <th>Stock</th>
                                 <th colspan="2">Acciones</th>
                             </tr>
@@ -46,23 +46,24 @@
                                 <td>{{nombreProducto}}</td>
                                 <td>{{categoria}}</td>
                                 <td>{{marca}}</td>
-                                <td>S/. {{precio}}</td>
+                                <td>S/. {{precio_unitario}}</td>
+                                <td>S/. {{precio_mayor}}</td>
                                 <td>{{stock}}</td>
                                 <td>
-                                    <a class="btn btn-warning" href="/producto/update/{{idProducto}}"><i
-                                            class="fas fa-edit"></i></a>
+                                    <a class="btn btn-warning" href="/producto/update/{{idProducto}}" style="width: 40px;"><img
+                                            src="/icon/pen-to-square-solid.svg" width="100%"></a>
                                 </td>
                                 <td>
                                     <form action="/producto/delete/{{idProducto}}?_method=DELETE" method="post">
                                         <input type="hidden" name="_method" value="DELETE">
-                                        <button type="submit" class="btn btn-danger"><i
-                                                class="fas fa-trash"></i></button>
+                                        <button type="submit" class="btn btn-danger" style="width: 40px;"><img
+                                                src="/icon/trash-solid.svg" width="100%"></button>
                                     </form>
                                 </td>
                             </tr>
                             {{else}}
                             <tr scope="col">
-                                <td colspan="7">
+                                <td colspan="8">
                                     <p class="card-text text-center">No hay registros que mostrar</p>
                                 </td>
                             </tr>

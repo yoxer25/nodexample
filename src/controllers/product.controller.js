@@ -26,47 +26,46 @@ export const getProducts = async (req, res) => {
 
 // función para mostrar la página de crear un nuevo producto
 export const getCreate = async (req, res) => {
+  const user = req.session;
   try {
     const { Id } = req.params;
     const categorie = await Categorie.getCategories({ Id });
-    res.render("products/create", { categorie });
+    res.render("products/create", { user, categorie });
   } catch (error) {
-    const msg = error.message;
-    res.render("products/create", { categorie });
+    res.render("products/create", { user });
   }
 };
 
 // función para crear nuevo producto
 export const create = async (req, res) => {
-  const { nameProduct, brand, price, stock, categorie, image, detail } =
+  const { nameProduct, brand, priceUnit, priceWholesale, stock, categorie } =
     req.body;
   try {
-    validationInput(nameProduct, brand, price, stock, categorie, image, detail);
+    validationInput(
+      nameProduct,
+      brand,
+      priceUnit,
+      priceWholesale,
+      stock,
+      categorie
+    );
     const data = await Product.searchBdProduct(nameProduct);
     if (data) {
       throw new Error("Datos ya existen");
     } else {
       const id = crypto.randomUUID();
-      const created = helpers.formatDate();
-      const updated = null;
-      const status = 1;
       await Product.create({
         id,
         categorie,
         nameProduct,
         brand,
-        detail,
-        price,
+        priceUnit: parseFloat(priceUnit),
+        priceWholesale: parseFloat(priceWholesale),
         stock,
-        image,
-        created,
-        updated,
-        status,
       });
     }
     res.redirect("/producto");
   } catch (error) {
-    const msg = error.message;
     res.redirect("/producto/create");
   }
 };
@@ -74,13 +73,11 @@ export const create = async (req, res) => {
 // función para traer desde la base de datos la información del producto que se quiere editar
 export const getProductById = async (req, res) => {
   const { Id } = req.params;
+  const user = req.session;
   try {
     const product = await Product.getProductById({ Id });
     const categorie = await Categorie.getSelectCategories({ Id });
-    res.render("products/update", {
-      product: product[0],
-      categorie,
-    });
+    res.render("products/update", { user, product: product[0], categorie });
   } catch (error) {
     const msg = error.message;
     res.redirect("/producto");
@@ -90,29 +87,28 @@ export const getProductById = async (req, res) => {
 // función para actualizar la información del producto seleccionado
 export const updateProductById = async (req, res) => {
   const { Id } = req.params;
-  const { nameProduct, brand, price, stock, categorie, image, detail } =
+  const { nameProduct, brand, priceUnit, priceWholesale, stock, categorie } =
     req.body;
   try {
-    validationInput(nameProduct, brand, price, stock, categorie, image, detail);
+    validationInput(
+      nameProduct,
+      brand,
+      priceUnit,
+      priceWholesale,
+      stock,
+      categorie
+    );
     const data = await Product.searchBdProduct(nameProduct);
     if (data) {
       if (nameProduct === data.nombreProducto && Id === data.idProducto) {
-        const [createdDate] = await Product.getProductById({ Id });
-        const created = createdDate.fechaCreacion;
-        const updated = helpers.formatDate();
-        const status = 1;
         await Product.updateById({
           Id,
           categorie,
           nameProduct,
           brand,
-          detail,
-          price,
+          priceUnit: parseFloat(priceUnit),
+          priceWholesale: parseFloat(priceWholesale),
           stock,
-          image,
-          created,
-          updated,
-          status,
         });
         res.redirect("/producto");
       }
@@ -120,27 +116,19 @@ export const updateProductById = async (req, res) => {
         throw new Error("Datos ya existen");
       }
     } else {
-      const [createdDate] = await Product.getProductById({ Id });
-      const created = createdDate.fechaCreacion;
-      const updated = helpers.formatDate();
-      const status = 1;
       await Product.updateById({
         Id,
         categorie,
         nameProduct,
         brand,
-        detail,
-        price,
+        priceUnit: parseFloat(priceUnit),
+        priceWholesale: parseFloat(priceWholesale),
         stock,
-        image,
-        created,
-        updated,
-        status,
       });
       res.redirect("/producto");
     }
   } catch (error) {
-    const msg = error.message;
+    console.log(error.message);
     res.redirect(`/producto/update/${Id}`);
   }
 };
@@ -153,29 +141,20 @@ export const deleteProductById = async (req, res) => {
     const categorie = product.idCategoria;
     const nameProduct = product.nombreProducto;
     const brand = product.marca;
-    const detail = product.detalle;
-    const price = product.precio;
+    const priceUnit = product.precio_unitario;
+    const priceWholesale = product.precio_mayor;
     const stock = product.stock;
-    const image = product.imagen;
-    const created = product.fechaCreacion;
-    const updated = helpers.formatDate();
-    const status = 0;
     await Product.deleteById({
       Id,
       categorie,
       nameProduct,
       brand,
-      detail,
-      price,
+      priceUnit: parseFloat(priceUnit),
+      priceWholesale: parseFloat(priceWholesale),
       stock,
-      image,
-      created,
-      updated,
-      status,
     });
     res.redirect("/producto");
   } catch (error) {
-    const msg = error.message;
     res.redirect("/producto");
   }
 };
@@ -204,10 +183,9 @@ export const importBD = async (req, res) => {
           const nameProduct = listProduct[0];
           const brand = listProduct[1];
           const nameCategorie = listProduct[2];
-          const detail = listProduct[3];
-          const price = listProduct[4];
+          const priceUnit = listProduct[3];
+          const priceWholesale = listProduct[4];
           const stock = listProduct[5];
-          const image = listProduct[6];
           // hacemos otro for para insertar producto por producto en la base de datos
           for (let j = 0; j < nameProduct.length; j++) {
             // traemos desde la base de datos el id de la categoria que tiene nuestro producto y lo guardamos en una constante
@@ -217,21 +195,14 @@ export const importBD = async (req, res) => {
               // creamos una constante para acceder especificamente al idcategoria(contiene el valor del id)
               const categorie = consultaId.idCategoria;
               const id = crypto.randomUUID();
-              const created = helpers.formatDate();
-              const updated = null;
-              const status = 1;
               await Product.create({
                 id,
                 categorie,
                 nameProduct,
                 brand,
-                detail,
-                price,
+                priceUnit: parseFloat(priceUnit),
+                priceWholesale: parseFloat(priceWholesale),        
                 stock,
-                image,
-                created,
-                updated,
-                status,
               });
               // se le especifica que cuando termine de insertar el producto, se detenga y salga del bucle
               break;
@@ -254,7 +225,6 @@ export const importBD = async (req, res) => {
       throw new Error("Seleccione un archivo .xlsx");
     }
   } catch (error) {
-    const msg = error.message;
     res.redirect("/producto");
   }
 };
@@ -274,20 +244,18 @@ function saveExcel(file) {
 function validationInput(
   nameProduct,
   brand,
-  price,
+  priceUnit,
+  priceWholesale,
   stock,
-  categorie,
-  image,
-  detail
+  categorie
 ) {
   if (
     nameProduct === "" ||
     brand === "" ||
-    price === "" ||
+    priceUnit === "" ||
+    priceWholesale === "" ||
     stock === "" ||
-    categorie === "" ||
-    image === "" ||
-    detail === ""
+    categorie === ""
   )
     throw new Error("Todos los campos son obligatorios");
 }

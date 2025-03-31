@@ -1,15 +1,14 @@
 // importamos la conexión a la base de datos
 import pool from "../bd.js";
+import { helpers } from "../libraries/helpers.js";
 
 // constructor con los campos de la tabla ventas en la base de datos
 class SchemaSale {
-  constructor(id, customer, receipt, amountPay, created, status) {
+  constructor(id, customer, receipt, amountPay) {
     this.idVenta = id;
     this.cliente = customer;
     this.comprobante = receipt;
     this.montoPagar = amountPay;
-    this.fechaCreacion = created;
-    this.estado = status;
   }
 }
 
@@ -33,16 +32,19 @@ export class Sale {
     );
     return sales;
   }
-  // para crear nueva venta
-  static async create({ id, customer, receipt, amountPay, created, status }) {
-    const newSale = new SchemaSale(
-      id,
-      customer,
-      receipt,
-      amountPay,
-      created,
-      status
+
+  // para traer datos de una venta por ID
+  static async getSaleById({ Id }) {
+    const [sales] = await pool.query(
+      "SELECT * FROM ventas v WHERE v.idVenta = ?",
+      [Id]
     );
+    return sales;
+  }
+  // para crear nueva venta
+  static async create({ id, customer, receipt, amountPay }) {
+    const newSale = new SchemaSale(id, customer, receipt, amountPay);
+    newSale.fechaCreacion = helpers.formatDate();
     await pool.query("INSERT INTO ventas SET ?", [newSale]);
   }
   // para traer el id de la última venta registrada

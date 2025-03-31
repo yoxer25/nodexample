@@ -2,15 +2,13 @@
 import pool from "../bd.js";
 // para generar id encriptados
 import crypto from "crypto";
+import { helpers } from "../libraries/helpers.js";
 
 // constructor con los campos de la tabla categorias en la base de datos
 class SchemaCategorie {
-  constructor(id, name, created, updated, status) {
+  constructor(id, name) {
     this.idCategoria = id;
     this.nombreCategoria = name;
-    this.fechaCreacion = created;
-    this.fechaActualizacion = updated;
-    this.estado = status;
   }
 }
 
@@ -65,8 +63,8 @@ export class Categorie {
   // para crear nueva categoría
   static async create({ nameCategorie }) {
     const id = crypto.randomUUID();
-    const creationDate = new Date();
-    const newCategorie = new SchemaCategorie(id, nameCategorie, creationDate, null, 1);
+    const newCategorie = new SchemaCategorie(id, nameCategorie);
+    newCategorie.fechaCreacion = helpers.formatDate();
     await pool.query("INSERT INTO categorias SET ?", [newCategorie]);
   }
   // para mostrar los datos de una categoría seleccionada por su id
@@ -83,15 +81,8 @@ export class Categorie {
   }
   // para actualizar datos de una categoría
   static async updateById({ Id, nameCategorie }) {
-    const [creationDate] = await Categorie.getCategorieById({ Id });
-    const updateDate = new Date();
-    const newCategorie = new SchemaCategorie(
-      Id,
-      nameCategorie,
-      creationDate.fechaCreacion,
-      updateDate,
-      1
-    );
+    const newCategorie = new SchemaCategorie(Id, nameCategorie);
+    newCategorie.fechaActualizacion = helpers.formatDate();
     await pool.query("UPDATE categorias c set ? WHERE c.idCategoria = ?", [
       newCategorie,
       Id,
@@ -100,14 +91,9 @@ export class Categorie {
   // para eliminar los datos de una categoría(no se borrarán los datos, solo cambiará el estado a 0 para aparecer como inactivo)
   static async deleteById({ Id }) {
     const [categorie] = await Categorie.getCategorieById({ Id });
-    const updateDate = new Date();
-    const newCategorie = new SchemaCategorie(
-      Id,
-      categorie.nombreCategoria,
-      categorie.fechaCreacion,
-      updateDate,
-      0
-    );
+    const newCategorie = new SchemaCategorie(Id, categorie.nombreCategoria);
+    newCategorie.fechaActualizacion = helpers.formatDate();
+    newCategorie.estado = 0;
     await pool.query("UPDATE categorias c set ? WHERE c.idCategoria = ?", [
       newCategorie,
       Id,

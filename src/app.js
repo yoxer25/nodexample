@@ -10,8 +10,6 @@ import cookieParser from "cookie-parser";
 import { fileURLToPath } from "url";
 // para peoder usar todos los métodos HTTP (GET, POST, PUT, DELETE)
 import methodOverride from "method-override";
-// para conectar con el front
-import cors from "cors";
 // para especificar en la configuración de las vistas donde se encuentran los helpers
 import { helpers } from "./libraries/helpers.js";
 
@@ -54,7 +52,6 @@ app.use(express.json());
 // modificar cookies
 app.use(cookieParser());
 app.use(methodOverride("_method"));
-app.use(cors());
 
 // rutas de la web
 app.use(homeRoutes);

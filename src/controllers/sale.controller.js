@@ -1,11 +1,12 @@
 //importamos la clase Product para poder usar sus métodos
 import { Product } from "../models/product.model.js";
+// para generar PDF
+import PDFDocument from "pdfkit";
 // para generar id encriptados
 import crypto from "crypto";
 // importamos el modelo de venta y detalle de venta
 import { Sale } from "../models/sale.model.js";
 import { SaleDetail } from "../models/saledetail.model.js";
-// importamos helpers para usar su función de formatear fechas
 import { helpers } from "../libraries/helpers.js";
 
 // exportamos todas las constantes para poder llamarlas desde la carpeta "routes" que tienen todas las rutas de la web
@@ -16,7 +17,6 @@ export const getSales = async (req, res) => {
     const sales = await Sale.getSales();
     res.render("sales/index", { user, sales });
   } catch (error) {
-    const msg = error.message;
     res.render("sales/index", { user });
   }
 };
@@ -28,7 +28,6 @@ export const getCreateSale = async (req, res) => {
     const products = await Product.getProducts();
     res.render("sales/create", { user, products });
   } catch (error) {
-    const msg = error.message;
     res.render("sales/create", { user });
   }
 };
@@ -41,26 +40,21 @@ export const createSale = async (req, res) => {
     validationInput(customer, receipt);
     const sale = JSON.parse(req.body.sale);
     const id = crypto.randomUUID();
-    const created = helpers.formatDate();
     let amountPay = 0;
     sale.map((productSale) => {
       amountPay += productSale.totalPrice;
     });
-    const status = 1;
     await Sale.create({
       id,
       customer,
       receipt,
       amountPay,
-      created,
-      status,
     });
     // recorremos los productos de la lista, para agregarlos en venta_detalle
     sale.map(async (productSale) => {
       const id = crypto.randomUUID();
       const sale = await Sale.SaleId();
       const idSale = sale[0].idVenta;
-      const status = 1;
       await SaleDetail.create({
         id,
         idSale,
@@ -68,7 +62,6 @@ export const createSale = async (req, res) => {
         quantity: productSale.quantity,
         unitPrice: productSale.unitPrice,
         totalPrice: productSale.totalPrice,
-        status,
       });
     });
     // recorremos los productos de la lista para ir descontando el stock
@@ -78,13 +71,9 @@ export const createSale = async (req, res) => {
       const categorie = product[0].idCategoria;
       const nameProduct = product[0].nombreProducto;
       const brand = product[0].marca;
-      const detail = product[0].detalle;
-      const price = product[0].precio;
+      const priceUnit = product[0].precio_unitario;
+      const priceWholesale = product[0].precio_mayor;
       const quantity = product[0].stock;
-      const image = product[0].imagen;
-      const created = product[0].fechaCreacion;
-      const updated = helpers.formatDate();
-      const status = 1;
       try {
         const quantityForm = Number(productSale.quantity);
         if (quantity >= quantityForm) {
@@ -94,26 +83,75 @@ export const createSale = async (req, res) => {
             categorie,
             nameProduct,
             brand,
-            detail,
-            price,
+            priceUnit,
+            priceWholesale,
             stock,
-            image,
-            created,
-            updated,
-            status,
           });
         } else {
           throw new Error("Stock Insuficiente");
         }
       } catch (error) {
-        const msg = error.message;
         res.redirect("/venta/create");
       }
     });
     res.redirect("/venta");
   } catch (error) {
-    const msg = error.message;
     res.redirect("/venta/create");
+  }
+};
+
+// función para ver el comprobante de la venta
+export const viewSale = async (req, res) => {
+  const { Id } = req.params;
+  try {
+    const [sale] = await Sale.getSaleById({ Id });
+    const dateTime = helpers.formatDateTime(sale.fechaCreacion);
+    const saleDetail = await SaleDetail.getSaleDetail({ Id });
+    // Crear un documento PDF
+    const doc = new PDFDocument();
+
+    // Configurar las cabeceras para que el navegador lo muestre como PDF
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader(
+      "Content-Disposition",
+      `inline; filename="Comprobante_${sale.comprobante}.pdf"`
+    );
+
+    // Pasa el stream del documento PDF directamente a la respuesta
+    doc.pipe(res);
+
+    // Agregar contenido al PDF
+    doc
+      .fontSize(15)
+      .text(`COMPROBANTE: ${sale.comprobante}`, { align: "center" });
+    doc.fontSize(10).text(`DOCUMENTO_CLIENTE: ${sale.cliente}`, 50, 140);
+    doc.text(`FECHA: ${dateTime}`, 50, 170);
+    doc.text(`---------------------------------------------------`, 50, 200);
+    doc.text(`PRODUCTO`, 50, 230);
+    doc.text(`CANTIDAD`, 310, 230);
+    doc.text(`PRECIO(u)`, 380, 230);
+    doc.text(`PRECIO(t)`, 470, 230);
+    doc.text(
+      `________________________________________________________________________________________`,
+      50,
+      233
+    );
+
+    for (let i = 0; i < saleDetail.length; i++) {
+      const element = saleDetail[i];
+      const espace = 250 + 20 * i;
+      const espace2 = 250 + 20 * saleDetail.length;
+      doc.text(`${element.nombreProducto}`, 50, espace);
+      doc.text(`${element.cantidad}`, 310, espace);
+      doc.text(`S/. ${element.precioUnitario}`, 380, espace);
+      doc.text(`S/. ${element.montoTotal}`, 470, espace);
+      doc.text(`TOTAL A PAGAR:`, 380, espace2);
+      doc.text(`S/. ${sale.montoPagar}`, 470, espace2);
+    }
+    // Finalizar el documento
+    doc.end();
+  } catch (error) {
+    res.redirect("/venta");
   }
 };
 

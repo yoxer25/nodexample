@@ -42,15 +42,15 @@
                                     {{nombreCategoria}}
                                 </td>
                                 <td>
-                                    <a class="btn btn-warning" href="/categoria/update/{{idCategoria}}"><i
-                                            class="fas fa-edit"></i></a>
+                                    <a class="btn btn-warning" href="/categoria/update/{{idCategoria}}" style="width: 40px;"><img
+                                            src="/icon/pen-to-square-solid.svg" width="100%"></a>
                                 </td>
                                 <td>
                                     <form action="/categoria/delete/{{idCategoria}}?_method=DELETE"
                                         method="post">
                                         <input type="hidden" name="_method" value="DELETE">
-                                        <button type="submit" class="btn btn-danger"><i
-                                                class="fas fa-trash"></i></button>
+                                        <button type="submit" class="btn btn-danger" style="width: 40px;"><img
+                                                src="/icon/trash-solid.svg" width="100%"></button>
                                     </form>
                                 </td>
                             </tr>
