@@ -26,10 +26,20 @@ export class Shopping {
       throw new Error("Datos no encontrados");
     }
   }
+
   // para traer las compras registradas en la BD
   static async getShopping() {
     const [shopping] = await pool.query(
       "SELECT * FROM compras c WHERE c.estado != 0"
+    );
+    return shopping;
+  }
+
+  // para traer datos de una compra por ID
+  static async getShoppingById({ Id }) {
+    const [shopping] = await pool.query(
+      "SELECT * FROM compras c WHERE c.idCompra = ?",
+      [Id]
     );
     return shopping;
   }

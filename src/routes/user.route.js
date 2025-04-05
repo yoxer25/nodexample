@@ -1,8 +1,8 @@
-// importamos lo necesario para poder usar las rutas de la página principal
+// importamos lo necesario para poder usar las rutas de la página del administrador para el CRUD de categorías
 import { Router } from "express";
 
 // importamos todas las funciones para asignar cada función a una ruta de la web
-import * as shoppingCtrl from "../controllers/shopping.controller.js";
+import * as usersCtrl from "../controllers/user.controller.js";
 
 /* para proteger nuestras rutas
 privadas, se verificará el
@@ -13,14 +13,14 @@ cookies */
 podrá acceder a estas rutas;
 caso contrario, no podrá acceder */
 import { requireToken } from "../middlewares/requireToken.js";
-
 const router = Router();
 
-// rutas de la página privada de compras
-router.get("/", requireToken, shoppingCtrl.getShopping);
-router.get("/create", requireToken, shoppingCtrl.getCreateShopping);
-router.post("/create", requireToken, shoppingCtrl.createShopping);
-router.get("/:Id", requireToken, shoppingCtrl.viewShopping);
+// rutas de la prequireToken,ágina privada de categorías
+router.get("/", requireToken, usersCtrl.getUsers);
+router.post("/", requireToken, usersCtrl.create);
+router.get("/:Id", requireToken, usersCtrl.getUserById);
+//router.put("/:Id", requireToken, usersCtrl.updateCategorieById);
+//router.delete("/:Id", requireToken, usersCtrl.deleteCategorieById);
 
 // exportamos la constante "router" para llamarla desde "app.js" que es el archivo donde se configura toda la web
 export default router;

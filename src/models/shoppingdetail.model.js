@@ -15,6 +15,19 @@ class SchemaShoppingDetail {
 
 // exportamos la clase "ShoppingDetail" para usarla en cualquier controlador
 export class ShoppingDetail {
+  // para traer todos los productos registrados en una compra en específico
+  static async getShoppingDetail({ Id }) {
+    const [products] = await pool.query(
+      "SELECT p.nombreProducto, p.marca, dc.cantidad, dc.precioUnitario, dc.montoTotal FROM detalle_compra dc INNER JOIN productos p ON dc.idProducto = p.idProducto WHERE dc.idCompra = ?",
+      [Id]
+    );
+    if (products) {
+      return products;
+    } else {
+      throw new Error("Datos no encontrados");
+    }
+  }
+
   // para crear un nuevo ítem de la compra
   static async create({
     id,
@@ -30,7 +43,7 @@ export class ShoppingDetail {
       idProduct,
       quantity,
       unitPrice,
-      totalPrice,
+      totalPrice
     );
     await pool.query("INSERT INTO detalle_compra SET ?", [newShoppingDetail]);
   }

@@ -1,0 +1,83 @@
+{{> navigation/navigation }}
+
+<div class="container-fluid py-5 px-sm-3 px-lg-5">
+    <div class="row pt-5 pb-5">
+        <div class="col-md-12 text-center">
+            <h6 class="text-uppercase" style="letter-spacing: 5px;">listado de usuarios</h6>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-4 pb-5">
+            <div class="card border-0">
+                <div class="card-header bg-primary text-center p-4">
+                    <h1 class="text-white m-0">Nueva Usuario</h1>
+                </div>
+                <div class="card-body rounded-bottom bg-white p-5">
+                    <form action="/usuario" method="POST">
+                        <div class="form-group">
+                            <input type="text" class="form-control p-4" placeholder="Nombre Usuario" name="nameUser"
+                                id="nameUser" required="required" />
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control p-4" placeholder="DNI Usuario" name="dni" id="dni"
+                                required="required" />
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control p-4" placeholder="Contraseña" name="passwordForm" id="passwordForm"
+                                required="required" />
+                        </div>
+                        <div>
+                            <button class="btn btn-primary btn-block py-3" type="submit">Registrar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <table id="datatablesSimple" width="100%">
+                        <thead>
+                            <tr scope="col">
+                                <th>DNI</th>
+                                <th>Nombres</th>
+                                <th colspan="2">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each users}}
+                            <tr scope="col">
+                                <td>
+                                    {{documento}}
+                                </td>
+                                <td>
+                                    {{nombreUsuario}}
+                                </td>
+                                <td>
+                                    <a class="btn btn-warning" href="/usuario/{{idUsuario}}" style="width: 40px;"><img
+                                            src="/icon/pen-to-square-solid.svg" width="100%"></a>
+                                </td>
+                                <td>
+                                    <form action="/usuario/{{idUsuario}}?_method=DELETE" method="post">
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <button type="submit" class="btn btn-danger" style="width: 40px;"><img
+                                                src="/icon/trash-solid.svg" width="100%"></button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {{else}}
+                            <tr scope="col">
+                                <td colspan="4">
+                                    <p class="card-text text-center">No hay registros que mostrar</p>
+                                </td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{> footer/footer }}

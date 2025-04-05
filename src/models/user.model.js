@@ -2,16 +2,42 @@
 import pool from "../bd.js";
 import { helpers } from "../libraries/helpers.js";
 class SchemaUser {
-  constructor(id, username, dni, userpassword, estado) {
+  constructor(id, username, dni) {
     this.idUsuario = id;
     this.nombreUsuario = username;
     this.documento = dni;
-    this.contrasena = userpassword;
-    this.estado = estado;
   }
 }
 
 export class User {
+  // para traer el listado de los usuarios
+  static async getUsers() {
+    const [users] = await pool.query(
+      "SELECT u.idUsuario, u.nombreUsuario, u.documento FROM usuarios u WHERE u.estado != 0"
+    );
+    if (users) {
+      return users;
+    } else {
+      throw new Error("Datos no encontrados");
+    }
+  }
+
+  // para traer la información de un usuario por ID
+  static async getUserById({ Id }) {
+    const [users] = await pool.query(
+      "SELECT u.idUsuario, u.nombreUsuario, u.documento FROM usuarios u WHERE u.estado != 0 AND u.idUsuario = ?",
+      [Id]
+    );
+    if (users) {
+      return users;
+    } else {
+      throw new Error("Datos no encontrados");
+    }
+  }
+
+  static async set() {
+    console.log("");
+  }
   /* // para crear un nuevo usuario
   static async registerUser(username, dni, userpassword) {
     const id = await crypto.randomUUID();
@@ -24,7 +50,7 @@ export class User {
   // para iniciar sesión
   static async login({ dni, userpassword }) {
     const [user] = await pool.query(
-      "SELECT * FROM usuarios u WHERE u.documento = ?",
+      "SELECT * FROM usuarios u WHERE u.documento = ? AND u.estado != 0",
       [dni]
     );
     if (user.length > 0) {
@@ -56,10 +82,9 @@ export class User {
       const userUpdate = new SchemaUser(
         userData.idUsuario,
         userData.nombreUsuario,
-        userData.documento,
-        password,
-        userData.estado
+        userData.documento
       );
+      userUpdate.contrasena = password;
       await pool.query("UPDATE usuarios u set ? WHERE u.idUsuario = ?", [
         userUpdate,
         userData.idUsuario,

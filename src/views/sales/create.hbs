@@ -69,8 +69,6 @@
                         <div class="form-group">
                             <input type="hidden" class="form-control p-4" name="sale" id="sale" value=""
                                 required="required" />
-                            <input type="text" class="form-control" placeholder="N° de Comprobante" name="receipt"
-                                id="receipt" value="" required="required" />
                         </div>
                         <div class="form-group">
                             <input type="text" maxlength="11" class="form-control" placeholder="N° de Documento Cliente"
@@ -135,20 +133,44 @@
         }
     }
 
-    /* función para renderizar la tabla cuando se
-    agregue o quiten productos */
-    const renderTable = (productSale) => {
-        // creamos una constante para nuestra tabla que tendrá la lista de productos a vender
-        const tbodyTable = document.getElementById("productsSale");
-        // agregamos los valores del objeto en cada fila de la tabla
-        tbodyTable.innerHTML += `<tr><td><input type="hidden" value="${productSale.idProduct}" /></td><td>${productSale.product}</td><td>${productSale.unitPrice}</td><td>${productSale.quantity}</td><td>${productSale.totalPrice}</td></tr>`;
+    // para eliminar productos de la tabla
+    const deleteProduct = (index) => {
+        // Elimina el producto en el índice especificado
+        productsSale.splice(index, 1);
+
+        // Llamamos a renderTable para actualizar la tabla con los productos restantes
+        renderTable();
     };
 
+    /* función para renderizar la tabla cuando se
+    agregue o quiten productos */
+    const renderTable = () => {
+        // Limpiamos el contenido actual de la tabla antes de volver a agregar todos los productos
+        const tbodyTable = document.getElementById("productsSale");
+        tbodyTable.innerHTML = '';  // Vaciamos el cuerpo de la tabla
+
+        // Iteramos sobre el array `productsSale` y agregamos cada producto como una nueva fila
+        productsSale.forEach((productSale, index) => {
+            tbodyTable.innerHTML += `<tr>
+            <td><input type="hidden" value="${productSale.idProduct}" /></td>
+            <td>${productSale.product}</td>
+            <td>${productSale.unitPrice}</td>
+            <td>${productSale.quantity}</td>
+            <td>${productSale.totalPrice}</td>
+            <td>
+                <a class="btn btn-danger" onclick="deleteProduct(${index})" style="width: 40px;">
+                    <img src="/icon/trash-solid.svg" width="100%">
+                </a>
+            </td>
+        </tr>`;
+        });
+    };
+
+    // para generar la venta y enviarla al backend
     const newSale = () => {
         if (productsSale.length > 0) {
-            const receipt = document.getElementById("receipt").value;
             const customer = document.getElementById("customer").value;
-            if (receipt === "" || customer === "") {
+            if (customer === "") {
                 alert("iTodos los campos son obligatorios");
             } else {
                 const inputSale = document.getElementById("sale");

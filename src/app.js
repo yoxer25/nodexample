@@ -19,7 +19,8 @@ import homeRoutes from "./routes/home.route.js";
 import categoriesRoutes from "./routes/categorie.route.js";
 import productsRoutes from "./routes/product.route.js";
 import salesRoutes from "./routes/sale.route.js";
-import shoppingRoutes from "./routes/shopping.route.js"
+import shoppingRoutes from "./routes/shopping.route.js";
+import userRouttes from "./routes/user.route.js";
 
 //constantes
 // para iniciar el servidor
@@ -60,6 +61,7 @@ app.use("/categoria", categoriesRoutes);
 app.use("/producto", productsRoutes);
 app.use("/venta", salesRoutes);
 app.use("/compra", shoppingRoutes);
+app.use("/usuario", userRouttes);
 
 // exportamos la constante "app" para poder utilizarla en otras parte del proyecto
 export default app;

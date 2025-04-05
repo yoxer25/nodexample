@@ -122,17 +122,42 @@
         } else {
             return alert("Producto ya existe");
         }
-    }
+    };
+    
+    // para eliminar productos de la tabla
+    const deleteProduct = (index) => {
+        // Elimina el producto en el índice especificado
+        productsShopping.splice(index, 1);
+
+        // Llamamos a renderTable para actualizar la tabla con los productos restantes
+        renderTable();
+    };
 
     /* función para renderizar la tabla cuando se
     agregue o quiten productos */
-    const renderTable = (productShopping) => {
-        // creamos una constante para nuestra tabla que tendrá la lista de productos a comprar
+    const renderTable = () => {
+        // Limpiamos el contenido actual de la tabla antes de volver a agregar todos los productos
         const tbodyTable = document.getElementById("productsShopping");
-        // agregamos los valores del objeto en cada fila de la tabla
-        tbodyTable.innerHTML += `<tr><td><input type="hidden" value="${productShopping.idProduct}" /></td><td>${productShopping.product}</td><td>${productShopping.unitPrice}</td><td>${productShopping.quantity}</td><td>${productShopping.totalPrice}</td></tr>`;
+        tbodyTable.innerHTML = '';  // Vaciamos el cuerpo de la tabla
+
+        // Iteramos sobre el array `productsShopping` y agregamos cada producto como una nueva fila
+        productsShopping.forEach((productShopping, index) => {
+            tbodyTable.innerHTML += `<tr>
+            <td><input type="hidden" value="${productShopping.idProduct}" /></td>
+            <td>${productShopping.product}</td>
+            <td>${productShopping.unitPrice}</td>
+            <td>${productShopping.quantity}</td>
+            <td>${productShopping.totalPrice}</td>
+            <td>
+                <a class="btn btn-danger" onclick="deleteProduct(${index})" style="width: 40px;">
+                    <img src="/icon/trash-solid.svg" width="100%">
+                </a>
+            </td>
+        </tr>`;
+        });
     };
 
+    // para generar la compra y enviarla al backend
     const newShopping = () => {
         if (productsShopping.length > 0) {
             const receipt = document.getElementById("receipt").value;

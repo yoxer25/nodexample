@@ -41,6 +41,7 @@ export class Sale {
     );
     return sales;
   }
+  
   // para crear nueva venta
   static async create({ id, customer, receipt, amountPay }) {
     const newSale = new SchemaSale(id, customer, receipt, amountPay);

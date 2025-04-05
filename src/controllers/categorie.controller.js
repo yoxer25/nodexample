@@ -39,7 +39,6 @@ export const getCategorieById = async (req, res) => {
     const categorie = await Categorie.getCategorieById({ Id });
     res.render("categories/update", { user, categorie: categorie[0] });
   } catch (error) {
-    const msg = error.message;
     res.redirect("/categoria");
   }
 };

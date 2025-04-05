@@ -8,9 +8,6 @@ import xlsxPopulate from "xlsx-populate";
 import { Product } from "../models/product.model.js";
 import { Categorie } from "../models/categorie.model.js";
 
-// para formatear fechas
-import { helpers } from "../libraries/helpers.js";
-
 // exportamos todas las constantes para poder llamarlas desde la carpeta "routes" que tienen todas las rutas de la web
 // función para mostrar en el panel del administrador todos los productos existentes en la BD
 export const getProducts = async (req, res) => {
