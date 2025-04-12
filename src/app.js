@@ -10,6 +10,7 @@ import cookieParser from "cookie-parser";
 import { fileURLToPath } from "url";
 // para peoder usar todos los métodos HTTP (GET, POST, PUT, DELETE)
 import methodOverride from "method-override";
+import "dotenv/config";
 // para especificar en la configuración de las vistas donde se encuentran los helpers
 import { helpers } from "./libraries/helpers.js";
 
