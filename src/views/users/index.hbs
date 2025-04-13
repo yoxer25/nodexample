@@ -23,8 +23,17 @@
                                 required="required" />
                         </div>
                         <div class="form-group">
-                            <input type="text" class="form-control p-4" placeholder="Contraseña" name="passwordForm" id="passwordForm"
-                                required="required" />
+                            <input type="text" class="form-control p-4" placeholder="Contraseña" name="passwordForm"
+                                id="passwordForm" required="required" />
+                        </div>
+                        <div class="form-group">
+                            <select class="form-select form-control" aria-label="Default select example"
+                                name="rol" id="rol" required="required">
+                                <option selected>Seleccione un rol</option>
+                                {{#each roles}}
+                                <option value="{{idRol}}">{{nombreRol}}</option>
+                                {{/each}}
+                            </select>
                         </div>
                         <div>
                             <button class="btn btn-primary btn-block py-3" type="submit">Registrar</button>
@@ -41,6 +50,7 @@
                             <tr scope="col">
                                 <th>DNI</th>
                                 <th>Nombres</th>
+                                <th>Rol</th>
                                 <th colspan="2">Acciones</th>
                             </tr>
                         </thead>
@@ -54,12 +64,15 @@
                                     {{nombreUsuario}}
                                 </td>
                                 <td>
+                                    {{nombreRol}}
+                                </td>
+                                <td>
                                     <a class="btn btn-warning" href="/usuario/{{idUsuario}}" style="width: 40px;"><img
                                             src="/icon/pen-to-square-solid.svg" width="100%"></a>
                                 </td>
                                 <td>
-                                    <form action="/usuario/{{idUsuario}}?_method=DELETE" method="post">
-                                        <input type="hidden" name="_method" value="DELETE">
+                                    <form action="/usuario/{{idUsuario}}?_method=PATCH" method="post">
+                                        <input type="hidden" name="_method" value="PATCH">
                                         <button type="submit" class="btn btn-danger" style="width: 40px;"><img
                                                 src="/icon/trash-solid.svg" width="100%"></button>
                                     </form>
@@ -67,7 +80,7 @@
                             </tr>
                             {{else}}
                             <tr scope="col">
-                                <td colspan="4">
+                                <td colspan="5">
                                     <p class="card-text text-center">No hay registros que mostrar</p>
                                 </td>
                             </tr>

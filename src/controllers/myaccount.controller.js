@@ -9,13 +9,6 @@ export const getSignIn = async (req, res) => {
   res.render("login/login");
 };
 
-// función para crear un usuario
-/* export const registerUser = async (req, res) => {
-  const { username, dni, userpassword } = req.body;
-  await formatUser.registerUser(username, dni, userpassword);
-}; */
-
-
 /* función para iniciar sesión, si las credenciales
 son correctas, se le genera un token y se le
 redirecciona a la página principal */
@@ -23,7 +16,7 @@ export const signIn = async (req, res) => {
   const { dni, userpassword } = req.body;
   try {
     const user = await User.login({ dni, userpassword });
-    const { token, expiresIn } = genarateToken(user.id, user.nombre);
+    const { token, expiresIn } = genarateToken(user.id, user.nombre, user.rol);
     res
       .cookie("access_token", token, expiresIn, {
         httpOnly: true,
@@ -32,7 +25,6 @@ export const signIn = async (req, res) => {
       })
       .redirect("/");
   } catch (error) {
-    console.log(error.message);
     res.redirect("/myaccount/signIn");
   }
 };

@@ -44,7 +44,7 @@ export const createSale = async (req, res) => {
     validationInput(customer);
     const sale = JSON.parse(req.body.sale);
     const id = crypto.randomUUID();
-    let receipt = await generateCorrelativo();;
+    let receipt = await generateCorrelativo();
     let amountPay = 0;
     sale.map((productSale) => {
       amountPay += productSale.totalPrice;

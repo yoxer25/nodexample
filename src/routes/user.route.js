@@ -19,8 +19,8 @@ const router = Router();
 router.get("/", requireToken, usersCtrl.getUsers);
 router.post("/", requireToken, usersCtrl.create);
 router.get("/:Id", requireToken, usersCtrl.getUserById);
-//router.put("/:Id", requireToken, usersCtrl.updateCategorieById);
-//router.delete("/:Id", requireToken, usersCtrl.deleteCategorieById);
+router.put("/:Id", requireToken, usersCtrl.set);
+router.patch("/:Id", requireToken, usersCtrl.set);
 
 // exportamos la constante "router" para llamarla desde "app.js" que es el archivo donde se configura toda la web
 export default router;

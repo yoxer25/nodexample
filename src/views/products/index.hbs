@@ -16,7 +16,8 @@
                                     class="input-contact form-control">
                             </div>
                             <div class="col-md-4">
-                                <button class="btn btn-primary btn-block" type="submit"><img src="/icon/upload-solid.svg" width="10%"> Importar</button>
+                                <button class="btn btn-primary btn-block" type="submit"><img
+                                        src="/icon/upload-solid.svg" width="10%"> Importar</button>
                             </div>
                         </div>
                     </form>
@@ -37,7 +38,9 @@
                                 <th>Precio Unitario</th>
                                 <th>Precio Por Mayor</th>
                                 <th>Stock</th>
+                                {{#if (eq user.user.rol "admin")}}
                                 <th colspan="2">Acciones</th>
+                                {{/if}}
                             </tr>
                         </thead>
                         <tbody>
@@ -49,9 +52,10 @@
                                 <td>S/. {{precio_unitario}}</td>
                                 <td>S/. {{precio_mayor}}</td>
                                 <td>{{stock}}</td>
+                                {{#if (eq user.user.rol "admin")}}
                                 <td>
-                                    <a class="btn btn-warning" href="/producto/update/{{idProducto}}" style="width: 40px;"><img
-                                            src="/icon/pen-to-square-solid.svg" width="100%"></a>
+                                    <a class="btn btn-warning" href="/producto/update/{{idProducto}}"
+                                        style="width: 40px;"><img src="/icon/pen-to-square-solid.svg" width="100%"></a>
                                 </td>
                                 <td>
                                     <form action="/producto/delete/{{idProducto}}?_method=DELETE" method="post">
@@ -60,6 +64,7 @@
                                                 src="/icon/trash-solid.svg" width="100%"></button>
                                     </form>
                                 </td>
+                                {{/if}}
                             </tr>
                             {{else}}
                             <tr scope="col">

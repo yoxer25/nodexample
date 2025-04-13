@@ -10,15 +10,19 @@
             </button>
             <div class="collapse navbar-collapse justify-content-between px-3" id="navbarCollapse">
                 <div class="navbar-nav ml-auto py-0">
+                    {{#if (eq user.user.rol "admin")}}
+                    <a href="/usuario" class="nav-item nav-link">USUARIOS</a>
+                    {{/if}}
                     <a href="/categoria" class="nav-item nav-link">CATEGORÍAS</a>
                     <a href="/producto" class="nav-item nav-link">PRODUCTOS</a>
-                    <a href="/usuario" class="nav-item nav-link">USUARIOS</a>
 
 
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">OPERACIONES</a>
                         <div class="dropdown-menu border-0 rounded-0 m-0">
+                            {{#if (eq user.user.rol "admin")}}
                             <a href="/compra" class="dropdown-item">Compras</a>
+                            {{/if}}
                             <a href="/venta" class="dropdown-item">Ventas</a>
                         </div>
                     </div>

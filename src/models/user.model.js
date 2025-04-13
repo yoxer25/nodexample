@@ -2,8 +2,9 @@
 import pool from "../bd.js";
 import { helpers } from "../libraries/helpers.js";
 class SchemaUser {
-  constructor(id, username, dni) {
+  constructor(id, rol, username, dni) {
     this.idUsuario = id;
+    this.idRol = rol;
     this.nombreUsuario = username;
     this.documento = dni;
   }
@@ -13,7 +14,7 @@ export class User {
   // para traer el listado de los usuarios
   static async getUsers() {
     const [users] = await pool.query(
-      "SELECT u.idUsuario, u.nombreUsuario, u.documento FROM usuarios u WHERE u.estado != 0"
+      "SELECT u.idUsuario, u.nombreUsuario, u.documento, r.nombreRol FROM usuarios u INNER JOIN rol r ON u.idRol = r.idRol WHERE u.estado != 0"
     );
     if (users) {
       return users;
@@ -25,7 +26,7 @@ export class User {
   // para traer la información de un usuario por ID
   static async getUserById({ Id }) {
     const [users] = await pool.query(
-      "SELECT u.idUsuario, u.nombreUsuario, u.documento FROM usuarios u WHERE u.estado != 0 AND u.idUsuario = ?",
+      "SELECT u.idUsuario, u.idRol, u.nombreUsuario, u.documento, r.nombreRol FROM usuarios u INNER JOIN rol r ON u.idRol = r.idRol WHERE u.estado != 0 AND u.idUsuario = ?",
       [Id]
     );
     if (users) {
@@ -35,22 +36,36 @@ export class User {
     }
   }
 
-  static async set() {
-    console.log("");
+  static async set(id, rol, username, dni, _method) {
+    if (_method === "PUT") {
+      const newUser = new SchemaUser(id, rol, username, dni);
+      newUser.fechaActualizacion = helpers.formatDate();
+      await pool.query("UPDATE usuarios u set ? WHERE u.idUsuario = ?", [
+        newUser,
+        id,
+      ]);
+    } else if (_method === "PATCH") {
+      const newUser = {
+        estado: 0,
+        fechaActualizacion: helpers.formatDate(),
+      };
+      await pool.query("UPDATE usuarios u set ? WHERE u.idUsuario = ?", [
+        newUser,
+        id,
+      ]);
+    }
   }
-  /* // para crear un nuevo usuario
-  static async registerUser(username, dni, userpassword) {
-    const id = await crypto.randomUUID();
-    const password = await bcrytp.hash(userpassword, 10);
-    const newUser = new SchemaUser(id, username, dni, password, 1);
-    console.log(newUser);
+  // para crear un nuevo usuario
+  static async create(id, rol, username, dni, password) {
+    const newUser = new SchemaUser(id, rol, username, dni);
+    newUser.contrasena = password;
+    newUser.fechaCreacion = helpers.formatDate();
     await pool.query("INSERT INTO usuarios SET ?", [newUser]);
-    res.redirect("/private");
-  } */
+  }
   // para iniciar sesión
   static async login({ dni, userpassword }) {
     const [user] = await pool.query(
-      "SELECT * FROM usuarios u WHERE u.documento = ? AND u.estado != 0",
+      "SELECT * FROM usuarios u INNER JOIN rol r ON u.idRol = r.idRol WHERE u.documento = ? AND u.estado != 0",
       [dni]
     );
     if (user.length > 0) {
@@ -63,6 +78,7 @@ export class User {
         const usuario = {
           id: userData.idUsuario,
           nombre: userData.nombreUsuario,
+          rol: userData.nombreRol,
         };
         return usuario;
       }
@@ -77,17 +93,14 @@ export class User {
       [id]
     );
     if (user.length > 0) {
-      const userData = user[0];
       const password = await helpers.encryptPassword(newPassword);
-      const userUpdate = new SchemaUser(
-        userData.idUsuario,
-        userData.nombreUsuario,
-        userData.documento
-      );
-      userUpdate.contrasena = password;
+      const userUpdate = {
+        contrasena: password,
+        fechaActualizacion: helpers.formatDate(),
+      };
       await pool.query("UPDATE usuarios u set ? WHERE u.idUsuario = ?", [
         userUpdate,
-        userData.idUsuario,
+        id,
       ]);
     }
   }

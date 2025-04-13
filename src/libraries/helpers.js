@@ -12,13 +12,14 @@ helpers.convertJson = (obj) => {
 };
 
 // función para formatear fecha de creación y actualización al guardar en la base de daros
-helpers.formatDate = () => dayjs().format('YYYY-MM-DD HH:mm:ss');
+helpers.formatDate = () => dayjs().format("YYYY-MM-DD HH:mm:ss");
 
 // función para formatear fecha del comprobante en el archivo PDF
-helpers.formatDateTime = (dateTime) => dayjs(dateTime).format('YYYY-MM-DD HH:mm:ss');
+helpers.formatDateTime = (dateTime) =>
+  dayjs(dateTime).format("YYYY-MM-DD HH:mm:ss");
 
 // función para formatear fechas para las vistas
-helpers.formatDateView = (date) => dayjs(date).format('YYYY-MM-DD');
+helpers.formatDateView = (date) => dayjs(date).format("YYYY-MM-DD");
 
 //para encriptar las contraseñas
 helpers.encryptPassword = async (password) => {
@@ -29,9 +30,9 @@ helpers.encryptPassword = async (password) => {
 
 // para comparar la contraseña que ingresa el user con la que est guardada en la BD
 helpers.matchPassword = async (password, savePassword) => {
-  try {
-      return await bcrytp.compare(password, savePassword);
-  } catch (error) {
-      console.log(error);
-  }
+  return await bcrytp.compare(password, savePassword);
 };
+
+/* para verificar poner limitaciones en las vistas
+cuando el usuario no es admin */
+helpers.eq = (a, b) => a === b;

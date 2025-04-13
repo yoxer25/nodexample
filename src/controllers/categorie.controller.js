@@ -62,7 +62,6 @@ export const updateCategorieById = async (req, res) => {
       res.redirect("/categoria");
     }
   } catch (error) {
-    const msg = error.message;
     res.redirect(`/categoria/update/${Id}`);
   }
 };

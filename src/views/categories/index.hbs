@@ -32,7 +32,9 @@
                         <thead>
                             <tr scope="col" colspan="3">
                                 <th>Nombre</th>
+                                {{#if (eq user.user.rol "admin")}}
                                 <th colspan="2">Acciones</th>
+                                {{/if}}
                             </tr>
                         </thead>
                         <tbody>
@@ -41,18 +43,19 @@
                                 <td>
                                     {{nombreCategoria}}
                                 </td>
+                                {{#if (eq user.user.rol "admin")}}
                                 <td>
-                                    <a class="btn btn-warning" href="/categoria/update/{{idCategoria}}" style="width: 40px;"><img
-                                            src="/icon/pen-to-square-solid.svg" width="100%"></a>
+                                    <a class="btn btn-warning" href="/categoria/update/{{idCategoria}}"
+                                        style="width: 40px;"><img src="/icon/pen-to-square-solid.svg" width="100%"></a>
                                 </td>
                                 <td>
-                                    <form action="/categoria/delete/{{idCategoria}}?_method=DELETE"
-                                        method="post">
+                                    <form action="/categoria/delete/{{idCategoria}}?_method=DELETE" method="post">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <button type="submit" class="btn btn-danger" style="width: 40px;"><img
                                                 src="/icon/trash-solid.svg" width="100%"></button>
                                     </form>
                                 </td>
+                                {{/if}}
                             </tr>
                             {{else}}
                             <tr scope="col">

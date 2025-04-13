@@ -38,9 +38,8 @@ export const updatePassword = async (req, res) => {
   const id = user.user.id;
   try {
     await User.updatePass({ id, newPassword });
-    res.redirect("/");
+    res.redirect("/myaccount/LogOut");
   } catch (error) {
-    console.log(error.message);
     res.redirect("/configuracion");
   }
 };
