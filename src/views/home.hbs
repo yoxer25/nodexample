@@ -83,6 +83,7 @@
                 </div>
             </div>
         </div>
+        {{#if (eq user.user.rol "admin")}}
         <div class="col-xl-4 col-lg-4 col-md-4 mb-2">
             <div class="card card-statistics h-100 card-dashboard border-2 border-primary">
                 <div class="card-body">
@@ -110,6 +111,7 @@
                 </div>
             </div>
         </div>
+        {{/if}}
     </div>
 </div>
 
